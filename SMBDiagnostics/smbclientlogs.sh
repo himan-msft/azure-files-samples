@@ -143,12 +143,12 @@ dump_os_information() {
   echo -e "\nSystem Uptime:" >> os_details.txt
   cat /proc/uptime >> os_details.txt
   echo -e "\npackage install details:" >> os_details.txt
-  if (( $(which rpm |egrep -c rpm) > 0));
+  if (( $(which dnf |egrep -c dnf) > 0));
   then
-    rpm -qa --last |grep keyutils >> os_details.txt
-    rpm -qa --last |grep cifs-utils >> os_details.txt
-    rpm -qi keyutils >> os_details.txt
-    rpm -qi cifs-utils >> os_details.txt
+    dnf repoquery --installed --qf "%{name}-%{version}-%{release}.%{arch}\t%{installtime}" | grep keyutils >> os_details.txt
+    dnf repoquery --installed --qf "%{name}-%{version}-%{release}.%{arch}\t%{installtime}" | grep cifs-utils >> os_details.txt
+    dnf info keyutils >> os_details.txt
+    dnf info cifs-utils >> os_details.txt
   elif (( $(which apt |egrep -c apt) > 0 ));
   then
     zgrep -B5 -A5 keyutils /var/log/apt/history.log* >> os_details.txt
